@@ -26,6 +26,7 @@ int main(int argc __attribute__((unused)), char **argv)
 				break;
 		}
 		args = tokenize(line, DELIM);
+		cmd_type = check_command(args[0]);
 		shell_execute(args);
 	}
 	return (1);
