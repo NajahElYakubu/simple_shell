@@ -5,13 +5,13 @@
  * @var: variable
  * @fd:
  * Return: result
- */ 
+ */
 int print(char *var, int fd)
 {
 	return (write(fd, var, _strlen(var)));
 }
 
-void (*get_func(char *command))(char **)
+void (*get_func(char *command))(char **, data_h *)
 {
 	int i;
 
@@ -23,7 +23,8 @@ void (*get_func(char *command))(char **)
 
 	for (i = 0; i < 3; i++)
 	{
-		if (_strcmp(command, map[i].cmd_name) == 0)
+		if (_strcmp(command, map[i].cmd_name)
+				== 0)
 			return (map[i].func);
 	}
 	return (NULL);
