@@ -44,6 +44,12 @@ char *_getline(void)
 		else
 			buffer[position] = c;
 		position++;
+i
+
+
+
+
+
 
 		if (position >= bufSize)
 		{
@@ -119,17 +125,17 @@ char **tokenize(char *str, const char *delim)
  */
 int is_delimeter(const char *delimeters, char c)
 {
-        int i = 0;
+	int i = 0;
 
-        if (!delimeters)
-                return (0);
-        while (delimeters[i])
-        {
-                if (delimeters[i] == c)
-                        return (1);
-                i++;
-        }
-        return (0);
+	if (!delimeters)
+		return (0);
+	while (delimeters[i])
+	{
+		if (delimeters[i] == c)
+			return (1);
+		i++;
+	}
+	return (0);
 }
 
 /**

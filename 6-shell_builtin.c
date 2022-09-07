@@ -1,6 +1,7 @@
 #include "shell.h"
 
-void env(char **command __attribute__((unused)), data_h *h __attribute__((unused)))
+void env(char **command __attribute__((unused)),
+	(data_h *)h __attribute__((unused)))
 {
 	int i = 0;
 
@@ -32,7 +33,7 @@ void ch_dir(char **command, data_h *var)
 	{
 		if (var->oldPath == NULL)
 		{
-			SETPWD(var ->oldPath);
+			SETPWD(var->oldPath);
 			if (chdir(home) < 0)
 				exit(EXIT_FAILURE);
 		}
