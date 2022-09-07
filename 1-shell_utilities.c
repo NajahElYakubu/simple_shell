@@ -108,32 +108,7 @@ char **tokenize(char *str, const char *delim)
 	arr[size] = NULL;
 	return (arr);
 }
-/**
- * shell_execute: 
- * @command:
- */
-void shell_execute(char **command)
-{
-	int stat;
-	pid_t PID;
 
-	PID = fork();
-	if (PID == 0)
-	{
-		if (execve(command[0], command, NULL) == -1)
-		{
-			perror("Failed");
-			exit(2);
-		}
-	}
-	if (PID < 0)
-	{
-		perror("failed to call fork");
-		exit(1);
-	}
-	else
-		wait(&stat);
-}
 /**
  * is_delimeter - check if a character is in delimeter
  *
@@ -144,17 +119,49 @@ void shell_execute(char **command)
  */
 int is_delimeter(const char *delimeters, char c)
 {
-	int i = 0;
+        int i = 0;
 
-	if (!delimeters)
-		return (0);
-	while (delimeters[i])
+        if (!delimeters)
+                return (0);
+        while (delimeters[i])
+        {
+                if (delimeters[i] == c)
+                        return (1);
+                i++;
+        }
+        return (0);
+}
+
+/**
+ * shell_execute: 
+ * @command:
+ *
+ *
+ */
+
+void shell_execute(char **command, int cmd_type, data_h *p)
+{
+	int stat;
+	pid_t PID;
+
+	if (cmd_type == EXTERNAL_CMD || cmd_type == PATH_CMD)
 	{
-		if (delimeters[i] == c)
-			return (1);
-		i++;
+		PID = fork();
+
+		if (PID == 0)
+		{
+			execute(command, cmd_type, p);
+		}
+		if (PID < 0)
+		{
+			perror("failed to call fork");
+			exit(1);
+		}
+		else
+			wait(&stat);
 	}
-	return (0);
+	else
+		execute(command, cmd_type, p);
 }
 
 int check_command(char *command)
@@ -173,16 +180,16 @@ int check_command(char *command)
 	while (int_cmd[i] != NULL)
 	{
 		if (_strcmp(command, int_cmd[i]) == 0)
-			return (INTERNAL_CMDd);
+			return (INTERNAL_CMD);
 		i++;
 	}
 
 	return (INVALID_CMD);
 }
 
-void execute(char **commands, int cmd_type)
+void execute(char **commands, int cmd_type, data_h *var)
 {
-	void (*func)(char **command);
+	void (*func)(char **command, data_h *p);
 
 	switch (cmd_type)
 	{
@@ -190,7 +197,7 @@ void execute(char **commands, int cmd_type)
 			{
 				if (execve(commands[0], commands, NULL) == -1)
 				{
-					perror((_getenv)("PWD"));
+					perror(_getenv("PWD"));
 					exit(2);
 				}
 				break;
@@ -198,7 +205,7 @@ void execute(char **commands, int cmd_type)
 		case INTERNAL_CMD:
 			{
 				func = get_func(commands[0]);
-				func(commands);
+				func(commands, var);
 				break;
 			}
 		case PATH_CMD:

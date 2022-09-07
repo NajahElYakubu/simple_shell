@@ -9,9 +9,13 @@
 
 int main(int argc __attribute__((unused)), char **argv)
 {
+	data_h var;
 	char *line;
 	char **args;
+	int cmd_type;
+
 	(void) argv;
+	var.oldPath = NULL;
 
 	signal(SIGINT, ctrl_C);
 
@@ -27,7 +31,7 @@ int main(int argc __attribute__((unused)), char **argv)
 		}
 		args = tokenize(line, DELIM);
 		cmd_type = check_command(args[0]);
-		shell_execute(args);
+		shell_execute(args, cmd_type, &var);
 	}
 	return (1);
 }
